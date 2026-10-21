@@ -1,0 +1,23 @@
+{
+  "name": "familyflow-ai",
+  "private": true,
+  "version": "0.1.0",
+  "description": "FamilyFlow AI — Less scrolling. More living together. Amazon Devices Hackathon 2026.",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "test:unit": "pnpm --filter @familyflow/domain test && pnpm --filter @familyflow/api test",
+    "lint": "pnpm -r run lint --if-present",
+    "typecheck": "pnpm -r run typecheck --if-present",
+    "dev:api": "pnpm --filter @familyflow/api dev",
+    "dev:web": "pnpm --filter @familyflow/parent-web dev",
+    "dev:tv": "pnpm --filter @familyflow/fire-tv dev",
+    "synth": "pnpm --filter @familyflow/infra synth",
+    "openapi": "pnpm --filter @familyflow/api openapi"
+  },
+  "license": "MIT"
+}

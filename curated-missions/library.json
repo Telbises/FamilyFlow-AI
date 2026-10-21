@@ -1,0 +1,71 @@
+[
+  {
+    "title": "Living Room Obstacle Course",
+    "ageBands": ["3-6", "7-12"],
+    "estimatedMinutes": 20,
+    "materials": ["pillows", "cushions", "painter tape optional"],
+    "steps": [
+      "Parent helps clear a safe path",
+      "Build soft obstacles with pillows",
+      "Take turns completing the course",
+      "Cheer for each finisher"
+    ],
+    "safetyNotes": ["Keep pathways clear of hard edges", "Adult supervision for ages 3-6"],
+    "parentApprovalRequired": true
+  },
+  {
+    "title": "Kitchen Herb Detective",
+    "ageBands": ["7-12", "13-17"],
+    "estimatedMinutes": 25,
+    "materials": ["safe kitchen herbs or spices", "paper", "pencil"],
+    "steps": [
+      "Wash hands together",
+      "Smell three safe herbs or spices",
+      "Guess names and write clues",
+      "Cook or garnish a simple snack with a parent"
+    ],
+    "safetyNotes": ["No hot surfaces without an adult", "No tasting unknown items"],
+    "parentApprovalRequired": true
+  },
+  {
+    "title": "Story Swap Picnic",
+    "ageBands": ["3-6", "7-12", "13-17"],
+    "estimatedMinutes": 30,
+    "materials": ["blanket", "favorite books or made-up stories", "water"],
+    "steps": [
+      "Lay a blanket indoors or in a safe yard with a parent",
+      "Each person shares a short story or book page",
+      "Draw a favorite moment together"
+    ],
+    "safetyNotes": ["Stay within parent-approved areas", "Sun protection outdoors"],
+    "parentApprovalRequired": true
+  },
+  {
+    "title": "Calm Corner Reset",
+    "ageBands": ["3-6", "7-12", "13-17"],
+    "estimatedMinutes": 15,
+    "materials": ["soft lighting", "timer", "optional calming music"],
+    "steps": [
+      "Choose a quiet corner",
+      "Stretch slowly for two minutes",
+      "Share one gratitude each",
+      "Plan one kind action for tomorrow"
+    ],
+    "safetyNotes": ["Optional activity — never forced", "Respect quiet needs"],
+    "parentApprovalRequired": true
+  },
+  {
+    "title": "Neighborhood Nature Noticing",
+    "ageBands": ["7-12", "13-17"],
+    "estimatedMinutes": 35,
+    "materials": ["notebook", "pencil", "comfortable shoes"],
+    "steps": [
+      "Walk a parent-approved route together",
+      "Notice five natural details",
+      "Sketch or list them",
+      "Talk about one thing to protect locally"
+    ],
+    "safetyNotes": ["Stay with family", "Follow traffic rules", "No location sharing online"],
+    "parentApprovalRequired": true
+  }
+]

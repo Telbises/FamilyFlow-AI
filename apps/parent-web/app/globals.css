@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+/*
+  FamilyFlow design tokens (Tailwind v4, CSS-first).
+  Direction: a warm living-room / family-adventure feel —
+  soft forest greens, lantern-amber accents, a mossy mist background with a little paper grain.
+*/
+@theme inline {
+  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-source), ui-sans-serif, system-ui, sans-serif;
+
+  --color-forest-50: #f1f6ef;
+  --color-forest-100: #dfeadb;
+  --color-forest-200: #c0d7ba;
+  --color-forest-300: #96ba90;
+  --color-forest-400: #6a9a68;
+  --color-forest-500: #4a7d4d;
+  --color-forest-600: #386439;
+  --color-forest-700: #2e5033;
+  --color-forest-800: #25402a;
+  --color-forest-900: #1b3022;
+  --color-forest-950: #101e15;
+
+  --color-lantern-50: #fff8e6;
+  --color-lantern-100: #ffecbb;
+  --color-lantern-200: #ffdb82;
+  --color-lantern-300: #fcc54a;
+  --color-lantern-400: #f2aa1c;
+  --color-lantern-500: #d98f0c;
+  --color-lantern-600: #b06b09;
+  --color-lantern-700: #8a510b;
+  --color-lantern-800: #6f410e;
+  --color-lantern-900: #5a360f;
+
+  --color-ink: #17251c;
+  --color-ink-soft: #45574b;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-sans text-ink antialiased;
+    min-height: 100dvh;
+    background-color: #e9f0e4;
+    background-image:
+      radial-gradient(1100px 520px at 92% -8%, rgb(242 170 28 / 0.2), transparent 62%),
+      radial-gradient(900px 640px at -8% 8%, rgb(74 125 77 / 0.2), transparent 60%),
+      radial-gradient(900px 520px at 55% 112%, rgb(150 186 144 / 0.3), transparent 62%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .25 0 0 0 0 .14 0 0 0 .075 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-attachment: fixed;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display text-forest-900;
+    font-variation-settings: "SOFT" 100, "WONK" 0;
+    letter-spacing: -0.01em;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-lantern-400);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: var(--color-lantern-200);
+    color: var(--color-forest-950);
+  }
+}
+
+@layer components {
+  .ff-card {
+    @apply rounded-3xl border border-forest-200/70 bg-white/80 p-5 backdrop-blur-sm sm:p-6;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.9) inset,
+      0 14px 32px -22px rgb(27 48 34 / 0.45);
+  }
+  .ff-input {
+    @apply min-h-11 w-full rounded-xl border border-forest-300 bg-white px-3.5 py-2 text-base text-ink placeholder:text-ink-soft/70;
+  }
+  .ff-input:focus-visible {
+    border-color: var(--color-forest-600);
+  }
+  .ff-label {
+    @apply mb-1.5 block text-sm font-semibold text-forest-900;
+  }
+  .ff-hint {
+    @apply mt-1 text-sm text-ink-soft;
+  }
+}
+
+/* Gentle entrance; fully disabled for people who prefer reduced motion. */
+@keyframes ff-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes ff-glow {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.ff-rise {
+  animation: ff-rise 0.5s ease-out both;
+}
+.ff-glow {
+  animation: ff-glow 4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .ff-rise,
+  .ff-glow {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}

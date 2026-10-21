@@ -1,0 +1,22 @@
+{
+  "name": "@familyflow/infra",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "synth": "cdk synth",
+    "diff": "cdk diff",
+    "deploy": "echo 'Refusing automatic deploy. Run: cdk deploy --profile YOUR_PROFILE after owner approval.' && exit 1",
+    "destroy": "echo 'Run manually: cdk destroy --profile YOUR_PROFILE' && exit 1"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.184.1",
+    "constructs": "^10.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "aws-cdk": "^2.184.1",
+    "typescript": "^5.8.2",
+    "ts-node": "^10.9.2"
+  }
+}

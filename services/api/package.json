@@ -1,0 +1,30 @@
+{
+  "name": "@familyflow/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/lambda.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "dev": "tsx watch src/local/server.ts",
+    "start": "tsx src/local/server.ts",
+    "test": "node --import tsx --test src/**/*.test.ts tests/**/*.test.ts",
+    "openapi": "tsx src/openapi-gen.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.758.0",
+    "@aws-sdk/client-dynamodb": "^3.758.0",
+    "@aws-sdk/lib-dynamodb": "^3.758.0",
+    "@familyflow/domain": "workspace:*",
+    "@familyflow/shared": "workspace:*",
+    "aws-jwt-verify": "^5.0.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.147",
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

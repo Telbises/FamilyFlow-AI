@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FamilyFlow — Living Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg1: #0f2a24;
+      --bg2: #1a3d34;
+      --amber: #e8a838;
+      --foam: #f3efe6;
+      --focus: #7dd3b0;
+      --muted: #b7c7c1;
+      --danger: #e07a5f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Source Sans 3", system-ui, sans-serif;
+      color: var(--foam);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #2d6a4f55, transparent),
+        radial-gradient(900px 500px at 100% 0%, #e8a83822, transparent),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+    }
+    .banner {
+      background: #5c3d11;
+      color: #ffe7b3;
+      padding: 0.6rem 1.5rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+    header {
+      padding: 2rem 3rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 2rem;
+    }
+    h1 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 3.2rem;
+      margin: 0;
+      line-height: 1.05;
+    }
+    .tag { color: var(--muted); font-size: 1.25rem; margin-top: 0.4rem; }
+    main { padding: 1rem 3rem 3rem; }
+    .row { display: flex; gap: 1.25rem; flex-wrap: wrap; }
+    .tile {
+      background: #14352cdd;
+      border: 3px solid transparent;
+      border-radius: 18px;
+      padding: 1.4rem 1.6rem;
+      min-width: 280px;
+      max-width: 360px;
+      outline: none;
+      color: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    }
+    .tile:focus, .tile.focused {
+      border-color: var(--focus);
+      box-shadow: 0 0 0 4px #7dd3b044;
+      transform: scale(1.03);
+    }
+    .tile h2 { font-family: Fraunces, serif; margin: 0 0 0.5rem; font-size: 1.6rem; }
+    .meta { color: var(--muted); font-size: 1.05rem; }
+    .panel {
+      background: #102820cc;
+      border-radius: 20px;
+      padding: 1.75rem;
+      margin-top: 1.5rem;
+      max-width: 920px;
+    }
+    .panel h2 { font-family: Fraunces, serif; font-size: 2rem; margin-top: 0; }
+    .actions { display: flex; gap: 1rem; margin-top: 1.25rem; flex-wrap: wrap; }
+    .btn {
+      font: inherit;
+      font-size: 1.25rem;
+      font-weight: 700;
+      padding: 0.9rem 1.4rem;
+      border-radius: 14px;
+      border: 3px solid transparent;
+      background: var(--amber);
+      color: #1a1205;
+      cursor: pointer;
+    }
+    .btn.secondary { background: transparent; border-color: var(--foam); color: var(--foam); }
+    .btn:focus { outline: none; border-color: var(--focus); box-shadow: 0 0 0 4px #7dd3b044; }
+    input {
+      font: inherit;
+      font-size: 1.4rem;
+      padding: 0.8rem 1rem;
+      border-radius: 12px;
+      border: 2px solid #3d5c52;
+      background: #0c1f1a;
+      color: var(--foam);
+      letter-spacing: 0.3em;
+      width: 10rem;
+    }
+    input:focus { border-color: var(--focus); outline: none; }
+    .status { margin-top: 1rem; color: var(--muted); font-size: 1.1rem; }
+    .pill {
+      display: inline-block;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      background: #245c4a;
+      font-size: 0.95rem;
+      margin-right: 0.4rem;
+    }
+    .pill.approved { background: #2d6a4f; }
+    .pill.pending { background: #7a5c20; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="banner">Browser 10-foot TV shell for FamilyFlow API testing — not the Vega Virtual Device. Install Vega SDK for hackathon simulator demo.</div>
+  <header>
+    <div>
+      <h1>FamilyFlow</h1>
+      <div class="tag">Less scrolling. More living together.</div>
+    </div>
+    <div class="status" id="sessionStatus">Not paired</div>
+  </header>
+  <main>
+    <section id="view-pair" class="panel">
+      <h2>Pair this TV</h2>
+      <p>Ask a parent to generate a code in the FamilyFlow dashboard, then enter it here.</p>
+      <div class="actions">
+        <input id="code" maxlength="6" inputmode="numeric" placeholder="••••••" aria-label="Pairing code" />
+        <button class="btn" id="pairBtn" data-focusable>Pair</button>
+      </div>
+      <p class="status" id="pairMsg"></p>
+    </section>
+
+    <section id="view-board" class="hidden">
+      <h2 style="font-family:Fraunces,serif;font-size:2rem;">Family Mission Board</h2>
+      <div class="row" id="missionRow"></div>
+    </section>
+
+    <section id="view-detail" class="panel hidden">
+      <h2 id="detailTitle"></h2>
+      <p id="detailMeta" class="meta"></p>
+      <ol id="detailSteps"></ol>
+      <p id="detailSafety" class="meta"></p>
+      <div class="actions">
+        <button class="btn" id="requestBtn" data-focusable>Request this adventure</button>
+        <button class="btn secondary" id="backBtn" data-focusable>Back to board</button>
+        <button class="btn secondary" id="completeBtn" data-focusable>We finished — ask parent</button>
+      </div>
+      <p class="status" id="detailMsg"></p>
+    </section>
+
+    <section id="view-celebrate" class="panel hidden">
+      <h2>Family celebration</h2>
+      <p id="celebrateText">When a parent verifies completion, points unlock non-purchasable family rewards.</p>
+      <div class="actions">
+        <button class="btn" id="toBoard" data-focusable>Back to missions</button>
+      </div>
+    </section>
+  </main>
+  <script>
+    const API = localStorage.getItem("ff_api") || "http://127.0.0.1:3100";
+    const PARENT_TOKEN = localStorage.getItem("ff_parent_token") || "local:local-parent-001";
+    let session = JSON.parse(localStorage.getItem("ff_session") || "null");
+    let childId = localStorage.getItem("ff_child_id") || "";
+    let missions = [];
+    let selected = null;
+    let focusables = [];
+    let focusIndex = 0;
+
+    const $ = (id) => document.getElementById(id);
+
+    function show(id) {
+      ["view-pair","view-board","view-detail","view-celebrate"].forEach((v) => {
+        $(v).classList.toggle("hidden", v !== id);
+      });
+      refreshFocusables();
+    }
+
+    function refreshFocusables() {
+      focusables = [...document.querySelectorAll("[data-focusable], .tile")].filter((el) => el.offsetParent !== null);
+      focusIndex = 0;
+      focusables[0]?.focus();
+    }
+
+    async function api(path, opts = {}) {
+      const res = await fetch(API + path, {
+        ...opts,
+        headers: {
+          "content-type": "application/json",
+          ...(opts.auth === false ? {} : { authorization: `Bearer ${PARENT_TOKEN}` }),
+          ...(opts.headers || {}),
+        },
+        body: opts.body ? JSON.stringify(opts.body) : undefined,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error?.message || res.statusText);
+      return data;
+    }
+
+    async function ensureChild() {
+      if (childId) return childId;
+      const cur = await api("/households/current");
+      const child = (cur.members || []).find((m) => m.role === "child" && m.active);
+      if (!child) throw new Error("Add a child profile in the parent dashboard first.");
+      childId = child.id;
+      localStorage.setItem("ff_child_id", childId);
+      return childId;
+    }
+
+    async function pair() {
+      const code = $("code").value.trim();
+      $("pairMsg").textContent = "Pairing…";
+      try {
+        const result = await api("/devices/pair", { method: "POST", body: { code, label: "Living Room TV" }, auth: false });
+        session = result;
+        localStorage.setItem("ff_session", JSON.stringify(session));
+        $("sessionStatus").textContent = `Paired · ${session.sessionId.slice(0, 8)}…`;
+        await loadMissions();
+        show("view-board");
+      } catch (e) {
+        $("pairMsg").textContent = e.message;
+      }
+    }
+
+    async function loadMissions() {
+      const data = await api("/missions");
+      missions = data.missions || [];
+      const row = $("missionRow");
+      row.innerHTML = "";
+      missions.forEach((m) => {
+        const btn = document.createElement("button");
+        btn.className = "tile";
+        btn.dataset.focusable = "1";
+        btn.innerHTML = `<h2>${m.title}</h2>
+          <div class="meta">${m.estimatedMinutes} min · ${(m.ageBands||[]).join(", ")}</div>
+          <div style="margin-top:0.7rem"><span class="pill ${m.status}">${m.status}</span>
+          <span class="pill">${m.origin === "bedrock" ? "AI plan" : "Curated"}</span></div>`;
+        btn.onclick = () => openMission(m);
+        row.appendChild(btn);
+      });
+      refreshFocusables();
+    }
+
+    function openMission(m) {
+      selected = m;
+      $("detailTitle").textContent = m.title;
+      $("detailMeta").textContent = `${m.estimatedMinutes} minutes · Ages ${(m.ageBands||[]).join(", ")} · Status: ${m.status}`;
+      $("detailSteps").innerHTML = (m.steps || []).map((s) => `<li>${s}</li>`).join("");
+      $("detailSafety").textContent = "Safety: " + (m.safetyNotes || []).join(" · ");
+      $("detailMsg").textContent = "";
+      show("view-detail");
+    }
+
+    async function requestMission() {
+      try {
+        const memberId = await ensureChild();
+        const data = await api(`/missions/${selected.id}/request`, {
+          method: "POST",
+          body: {
+            memberId,
+            source: "fire_tv",
+            idempotencyKey: `tv-${selected.id}-${Date.now()}`,
+          },
+        });
+        $("detailMsg").textContent = `Request pending parent approval (${data.request.id.slice(0, 8)}…).`;
+        await loadMissions();
+      } catch (e) {
+        $("detailMsg").textContent = e.message;
+      }
+    }
+
+    async function requestComplete() {
+      try {
+        const memberId = await ensureChild();
+        await api(`/missions/${selected.id}/complete-request`, {
+          method: "POST",
+          body: { memberId, idempotencyKey: `tv-complete-${selected.id}-${Date.now()}` },
+        });
+        $("celebrateText").textContent = "Completion sent. A parent must verify in the dashboard before points unlock.";
+        show("view-celebrate");
+      } catch (e) {
+        $("detailMsg").textContent = e.message;
+      }
+    }
+
+    $("pairBtn").onclick = pair;
+    $("requestBtn").onclick = requestMission;
+    $("completeBtn").onclick = requestComplete;
+    $("backBtn").onclick = async () => { await loadMissions(); show("view-board"); };
+    $("toBoard").onclick = async () => { await loadMissions(); show("view-board"); };
+
+    document.addEventListener("keydown", (e) => {
+      if (!focusables.length) return;
+      if (["ArrowRight","ArrowDown"].includes(e.key)) {
+        e.preventDefault();
+        focusIndex = (focusIndex + 1) % focusables.length;
+        focusables[focusIndex].focus();
+      } else if (["ArrowLeft","ArrowUp"].includes(e.key)) {
+        e.preventDefault();
+        focusIndex = (focusIndex - 1 + focusables.length) % focusables.length;
+        focusables[focusIndex].focus();
+      } else if (e.key === "Enter" && document.activeElement?.click) {
+        document.activeElement.click();
+      }
+    });
+
+    (async () => {
+      if (session?.sessionId) {
+        $("sessionStatus").textContent = `Paired · ${session.sessionId.slice(0, 8)}…`;
+        try {
+          await loadMissions();
+          show("view-board");
+        } catch {
+          show("view-pair");
+        }
+      } else {
+        show("view-pair");
+      }
+    })();
+  </script>
+</body>
+</html>

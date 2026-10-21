@@ -1,0 +1,65 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "family flow",
+      "intents": [
+        {
+          "name": "LaunchFamilyFlow",
+          "samples": [
+            "open family flow",
+            "start family flow",
+            "launch family flow"
+          ]
+        },
+        {
+          "name": "SuggestAdventure",
+          "slots": [
+            {
+              "name": "category",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "suggest an adventure",
+            "suggest a {category} adventure",
+            "what should we do together"
+          ]
+        },
+        {
+          "name": "RequestAdventure",
+          "slots": [
+            {
+              "name": "missionTitle",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "request {missionTitle}",
+            "ask to do {missionTitle}",
+            "request the adventure"
+          ]
+        },
+        {
+          "name": "CheckMissionStatus",
+          "samples": [
+            "what is our mission status",
+            "check mission status",
+            "is our adventure approved"
+          ]
+        },
+        {
+          "name": "FamilyHelp",
+          "samples": [
+            "help",
+            "how does family flow work",
+            "what can I ask"
+          ]
+        },
+        { "name": "AMAZON.CancelIntent", "samples": [] },
+        { "name": "AMAZON.HelpIntent", "samples": [] },
+        { "name": "AMAZON.StopIntent", "samples": [] },
+        { "name": "AMAZON.NavigateHomeIntent", "samples": [] }
+      ]
+    }
+  }
+}
