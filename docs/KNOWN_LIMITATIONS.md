@@ -1,0 +1,25 @@
+# Known Limitations
+
+Honest list of unverified or incomplete capabilities. **Do not claim these work in demos.**
+
+| Limitation | Impact | Mitigation / next action |
+|------------|--------|--------------------------|
+| No AWS credentials / CLI on this host | Cannot run live Cognito, API Gateway, DynamoDB, Bedrock | Owner installs AWS CLI, configures account, approves deploy |
+| Vega SDK / VVD not installed | Cannot record official Fire TV/Vega simulator video | Install VDT; port RN-TV app to VVD |
+| Browser TV shell ≠ Vega OS | Hackathon video must use VVD or device | Keep shell for API testing only |
+| Alexa Developer Console unexecuted | Account linking not proven in Console | Configure skill + Cognito linking; or document local simulator |
+| Local Bearer auth | Not production identity | Disable in AWS (`ALLOW_LOCAL_DEV_AUTH=false`) |
+| Bedrock default off | AI suggestions use curated library | Enable after model access + cost approval |
+| Playwright E2E missing | Dashboard not browser-automated yet | Add Playwright suite (step 26) |
+| Physical Fire TV absent | Cannot do device fidelity testing | VVD interim; device before Appstore |
+| Email SNS alerts optional | In-app polling first | Wire SNS after deploy if needed |
+| No COPPA/legal certification | Cannot onboard real children | External legal/privacy review |
+| CDK Bedrock IAM uses broad invoke | Should scope to model ARN | Tighten after region/model chosen |
+| Weekly planner day assignments | Stored in browser localStorage only | Acceptable for hackathon; not server schedule |
+
+## What *is* claimed working (local)
+
+- Household → child → pair → request → parent approve → complete → points once → audit
+- Automated domain + API vertical-slice tests
+- Parent dashboard against local API
+- Alexa local intent simulator against local API

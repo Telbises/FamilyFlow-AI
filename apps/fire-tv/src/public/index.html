@@ -167,7 +167,6 @@
   </main>
   <script>
     const API = localStorage.getItem("ff_api") || "http://127.0.0.1:3100";
-    const PARENT_TOKEN = localStorage.getItem("ff_parent_token") || "local:local-parent-001";
     let session = JSON.parse(localStorage.getItem("ff_session") || "null");
     let childId = localStorage.getItem("ff_child_id") || "";
     let missions = [];
@@ -176,6 +175,11 @@
     let focusIndex = 0;
 
     const $ = (id) => document.getElementById(id);
+
+    function deviceAuthHeader() {
+      if (!session?.sessionId || !session?.sessionToken) return null;
+      return `Bearer device:${session.sessionId}:${session.sessionToken}`;
+    }
 
     function show(id) {
       ["view-pair","view-board","view-detail","view-celebrate"].forEach((v) => {
@@ -191,13 +195,18 @@
     }
 
     async function api(path, opts = {}) {
+      const headers = {
+        "content-type": "application/json",
+        ...(opts.headers || {}),
+      };
+      if (opts.auth !== false) {
+        const device = deviceAuthHeader();
+        if (!device) throw new Error("TV not paired");
+        headers.authorization = device;
+      }
       const res = await fetch(API + path, {
         ...opts,
-        headers: {
-          "content-type": "application/json",
-          ...(opts.auth === false ? {} : { authorization: `Bearer ${PARENT_TOKEN}` }),
-          ...(opts.headers || {}),
-        },
+        headers,
         body: opts.body ? JSON.stringify(opts.body) : undefined,
       });
       const data = await res.json().catch(() => ({}));
@@ -207,8 +216,8 @@
 
     async function ensureChild() {
       if (childId) return childId;
-      const cur = await api("/households/current");
-      const child = (cur.members || []).find((m) => m.role === "child" && m.active);
+      const ctx = await api("/devices/me");
+      const child = (ctx.children || [])[0];
       if (!child) throw new Error("Add a child profile in the parent dashboard first.");
       childId = child.id;
       localStorage.setItem("ff_child_id", childId);
@@ -231,9 +240,8 @@
     }
 
     async function loadMissions() {
-      const data = await api("/missions");
-      missions = data.missions || [];
-      const row = $("missionRow");
+      const data = await api(`/devices/${session.sessionId}/missions`);
+      missions = data.missions || [];      const row = $("missionRow");
       row.innerHTML = "";
       missions.forEach((m) => {
         const btn = document.createElement("button");

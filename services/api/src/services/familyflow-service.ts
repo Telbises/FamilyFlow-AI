@@ -12,7 +12,9 @@ import {
   computePointsAward,
   DEFAULT_REWARD_THRESHOLDS,
   generatePairingCode,
+  generateSessionToken,
   hashPairingCode,
+  hashSessionToken,
   missionStatusAfterCompletionDecision,
   missionStatusAfterRequestDecision,
   pairingExpiryIso,
@@ -21,6 +23,7 @@ import {
   requireChildVisibilityNotice,
   rewardUnlocked,
   assertPairingValid,
+  pairingCodesEqual,
 } from "@familyflow/domain";
 import {
   Errors,
@@ -217,6 +220,7 @@ export class FamilyFlowService {
       id: randomUUID(),
       householdId: household.id,
       pairingHash,
+      sessionTokenHash: null,
       pairedAt: null,
       expiresAt: pairingExpiryIso(this.config.pairingTtlSeconds, now),
       revokedAt: null,
@@ -242,7 +246,14 @@ export class FamilyFlowService {
     const session = await this.repo.findSessionByPairingHash(pairingHash);
     if (!session) throw Errors.notFound("Pairing session");
     assertPairingValid({ expiresAt: session.expiresAt, revokedAt: session.revokedAt });
-    const paired = await this.repo.markDevicePaired(session.householdId, session.id);
+    const sessionToken = generateSessionToken();
+    const sessionTokenHash = hashSessionToken(sessionToken);
+    const paired = await this.repo.markDevicePaired(
+      session.householdId,
+      session.id,
+      sessionTokenHash,
+      input.label,
+    );
     await this.repo.putAudit(
       buildAuditEvent({
         householdId: session.householdId,
@@ -258,7 +269,23 @@ export class FamilyFlowService {
       householdId: session.householdId,
       label: input.label,
       pairedAt: paired.pairedAt,
+      /** Returned once — store on device; never logged. */
+      sessionToken,
     };
+  }
+
+  async authenticateDeviceSession(sessionId: string, sessionToken: string) {
+    const resolved = await this.repo.findDeviceSessionById(sessionId);
+    if (!resolved || !resolved.pairedAt || resolved.revokedAt) {
+      throw Errors.unauthorized("Device session invalid");
+    }
+    if (
+      !resolved.sessionTokenHash ||
+      !pairingCodesEqual(resolved.sessionTokenHash, hashSessionToken(sessionToken))
+    ) {
+      throw Errors.unauthorized("Device session token invalid");
+    }
+    return resolved;
   }
 
   /** Device-authenticated mission list via session id header. */
@@ -268,6 +295,24 @@ export class FamilyFlowService {
       throw Errors.unauthorized("Device session invalid");
     }
     return this.repo.listMissions(householdId);
+  }
+
+  async deviceContext(householdId: string, sessionId: string) {
+    await this.listMissionsForDevice(householdId, sessionId);
+    const members = await this.repo.listMembers(householdId);
+    return {
+      householdId,
+      sessionId,
+      children: members
+        .filter((m) => m.role === "child" && m.active)
+        .map((m) => ({
+          id: m.id,
+          displayName: m.displayName,
+          ageBand: m.ageBand,
+        })),
+      notice:
+        "FamilyFlow shows parents activity inside this app only. A parent reviews requests and completions.",
+    };
   }
 
   async listMissions(auth: AuthContext) {

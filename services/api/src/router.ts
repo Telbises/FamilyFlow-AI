@@ -53,7 +53,50 @@ export async function handleRequest(
       return json(200, result);
     }
 
-    // Device session mission polling
+    const authHeader = header(req, "authorization");
+
+    // Device session auth: Bearer device:<sessionId>:<sessionToken>
+    if (authHeader?.startsWith("Bearer device:")) {
+      const parts = authHeader.slice("Bearer device:".length).split(":");
+      const sessionId = parts[0];
+      const sessionToken = parts.slice(1).join(":");
+      if (!sessionId || !sessionToken) throw Errors.unauthorized("Malformed device token");
+      const device = await service.authenticateDeviceSession(sessionId, sessionToken);
+
+      if (req.method === "GET" && req.path === "/devices/me") {
+        return json(200, await service.deviceContext(device.householdId, sessionId));
+      }
+      const deviceMissions = match(req.path, "/devices/:sessionId/missions");
+      if (req.method === "GET" && deviceMissions) {
+        if (deviceMissions.sessionId !== sessionId) throw Errors.forbidden("Session mismatch");
+        const missions = await service.listMissionsForDevice(device.householdId, sessionId);
+        return json(200, { missions });
+      }
+      const missionRequest = match(req.path, "/missions/:id/request");
+      if (req.method === "POST" && missionRequest) {
+        return json(
+          201,
+          await service.requestMission(null, missionRequest.id!, req.body, {
+            householdId: device.householdId,
+            actorType: "device",
+          }),
+        );
+      }
+      const completeRequest = match(req.path, "/missions/:id/complete-request");
+      if (req.method === "POST" && completeRequest) {
+        return json(
+          201,
+          await service.requestCompletion(null, completeRequest.id!, req.body, {
+            householdId: device.householdId,
+          }),
+        );
+      }
+      return json(404, {
+        error: { code: "NOT_FOUND", message: `No device route ${req.method} ${req.path}` },
+      });
+    }
+
+    // Legacy query-based device mission poll (householdId + session id) — prefer device bearer
     const deviceMissions = match(req.path, "/devices/:sessionId/missions");
     if (req.method === "GET" && deviceMissions) {
       const householdId = req.query.householdId;
@@ -62,12 +105,10 @@ export async function handleRequest(
       return json(200, { missions });
     }
 
-    const authHeader = header(req, "authorization");
     let auth: AuthContext;
     try {
       auth = await authenticate(authHeader, config);
     } catch (e) {
-      // Alexa skill backend may forward linked account token the same way.
       throw e;
     }
 

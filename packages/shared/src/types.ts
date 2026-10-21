@@ -82,6 +82,8 @@ export interface DeviceSession {
   householdId: string;
   /** SHA-256 hash of pairing code; plaintext never stored. */
   pairingHash: string | null;
+  /** SHA-256 hash of post-pair session secret; plaintext returned once at pair time. */
+  sessionTokenHash: string | null;
   pairedAt: string | null;
   expiresAt: string;
   revokedAt: string | null;

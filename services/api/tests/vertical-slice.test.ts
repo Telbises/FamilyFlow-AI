@@ -34,6 +34,12 @@ describe("vertical slice: request → approve → complete → points once", () 
     assert.match(pairing.code, /^\d{6}$/);
     const paired = await service.pairDevice({ code: pairing.code, label: "Living Room TV" });
     assert.equal(paired.householdId, household.id);
+    assert.ok(paired.sessionToken);
+    const device = await service.authenticateDeviceSession(paired.sessionId, paired.sessionToken);
+    assert.equal(device.householdId, household.id);
+    await assert.rejects(() =>
+      service.authenticateDeviceSession(paired.sessionId, "wrong-token"),
+    );
 
     const { missions } = { missions: await service.listMissions(auth) };
     assert.ok(missions.length >= 1);

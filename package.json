@@ -17,7 +17,9 @@
     "dev:web": "pnpm --filter @familyflow/parent-web dev",
     "dev:tv": "pnpm --filter @familyflow/fire-tv dev",
     "synth": "pnpm --filter @familyflow/infra synth",
-    "openapi": "pnpm --filter @familyflow/api openapi"
+    "openapi": "pnpm --filter @familyflow/api openapi",
+    "verify:env": "bash scripts/verify-environment.sh",
+    "test:all": "bash scripts/run-tests.sh"
   },
   "license": "MIT"
 }

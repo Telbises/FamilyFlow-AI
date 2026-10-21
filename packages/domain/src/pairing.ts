@@ -1,4 +1,4 @@
-import { createHash, randomInt, timingSafeEqual } from "node:crypto";
+import { createHash, randomBytes, randomInt, timingSafeEqual } from "node:crypto";
 import { Errors } from "@familyflow/shared";
 
 export function generatePairingCode(): string {
@@ -7,6 +7,14 @@ export function generatePairingCode(): string {
 
 export function hashPairingCode(code: string): string {
   return createHash("sha256").update(`familyflow-pairing:${code}`).digest("hex");
+}
+
+export function generateSessionToken(): string {
+  return randomBytes(24).toString("base64url");
+}
+
+export function hashSessionToken(token: string): string {
+  return createHash("sha256").update(`familyflow-device:${token}`).digest("hex");
 }
 
 export function pairingCodesEqual(aHash: string, bHash: string): boolean {

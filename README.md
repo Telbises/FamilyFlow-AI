@@ -6,11 +6,15 @@ Family coordination and adventure app for the [Amazon Devices Hackathon 2026](ht
 
 Parents and kids browse missions on the living-room screen, request adventures by TV or Alexa FamilyFlow skill, and parents approve everything in a web dashboard. Points unlock **non-purchasable** family rewards. Visibility is **FamilyFlow activity only** — not unrelated Alexa chats, Amazon purchases, or third-party Fire TV telemetry.
 
-## M0 status (2026-10-20)
+## Status and docs
 
-See [`docs/M0-VERIFICATION.md`](docs/M0-VERIFICATION.md) for toolchain, hackathon rules verification, and blockers.
+- [`docs/IMPLEMENTATION_STATUS.md`](docs/IMPLEMENTATION_STATUS.md) — 30-step roadmap  
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) · [`docs/SECURITY.md`](docs/SECURITY.md) · [`docs/PRIVACY_AND_CHILD_SAFETY.md`](docs/PRIVACY_AND_CHILD_SAFETY.md)  
+- [`docs/TEST_MATRIX.md`](docs/TEST_MATRIX.md) · [`docs/SIMULATOR_TEST_GUIDE.md`](docs/SIMULATOR_TEST_GUIDE.md)  
+- [`docs/AWS_COSTS_AND_TEARDOWN.md`](docs/AWS_COSTS_AND_TEARDOWN.md) · [`docs/KNOWN_LIMITATIONS.md`](docs/KNOWN_LIMITATIONS.md)  
+- [`docs/HACKATHON_SUBMISSION.md`](docs/HACKATHON_SUBMISSION.md) · [`docs/M0-VERIFICATION.md`](docs/M0-VERIFICATION.md)
 
-**Blockers still requiring owner action:** AWS credentials + CLI, Vega SDK/VVD install, deploy approval, GitHub destination if not `Telbises`.
+**Owner blockers:** AWS CLI + credentials (no deploy without approval), Vega SDK/VVD, Alexa Developer Console linking.
 
 ## Monorepo layout
 
@@ -81,13 +85,11 @@ Copy `.env.example`. Important flags:
 ## Tests
 
 ```bash
-./.tools/pnpm-bin --filter @familyflow/domain test
-./.tools/pnpm-bin --filter @familyflow/api test
-./.tools/pnpm-bin --filter @familyflow/fire-tv test
-./.tools/pnpm-bin --filter @familyflow/alexa test
+./scripts/verify-environment.sh
+./scripts/run-tests.sh
 ```
 
-Never mark unexecuted tests as passed. Playwright E2E and Vega VVD navigation tests are **not executed** until browsers/Vega are installed — see `docs/TEST-STATUS.md`.
+Never mark unexecuted tests as passed. Playwright E2E and Vega VVD tests are **not executed** until installed — see `docs/TEST_MATRIX.md`.
 
 ## Alexa
 

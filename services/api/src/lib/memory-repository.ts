@@ -208,6 +208,10 @@ export class MemoryFamilyFlowRepository {
         ? { GSI2PK: `PAIRING#${pairingHash}`, GSI2SK: `SESSION#${session.id}` }
         : {}),
     });
+    this.items.set(this.key(`DEVICEIDX#${session.id}`, "META"), {
+      sessionId: session.id,
+      householdId: session.householdId,
+    });
   }
 
   async getDeviceSession(householdId: string, sessionId: string): Promise<DeviceSession | null> {
@@ -226,12 +230,36 @@ export class MemoryFamilyFlowRepository {
     return null;
   }
 
-  async markDevicePaired(householdId: string, sessionId: string): Promise<DeviceSession> {
+  async markDevicePaired(
+    householdId: string,
+    sessionId: string,
+    sessionTokenHash: string,
+    label: string,
+  ): Promise<DeviceSession> {
     const cur = await this.getDeviceSession(householdId, sessionId);
     if (!cur || cur.pairedAt) throw Errors.conflict("already paired");
-    const updated = { ...cur, pairedAt: new Date().toISOString(), pairingHash: null };
+    const updated = {
+      ...cur,
+      pairedAt: new Date().toISOString(),
+      pairingHash: null,
+      sessionTokenHash,
+      label,
+    };
     this.items.set(this.key(`HOUSEHOLD#${householdId}`, `DEVICE#${sessionId}`), { ...updated });
     return updated;
+  }
+
+  async findDeviceSessionById(sessionId: string): Promise<(DeviceSession & { householdId: string }) | null> {
+    for (const [k, v] of this.items) {
+      if (k.includes(`||DEVICE#${sessionId}`)) {
+        return this.strip(v) as DeviceSession & { householdId: string };
+      }
+    }
+    return null;
+  }
+
+  async getDeviceSessionAuth(householdId: string, sessionId: string): Promise<DeviceSession | null> {
+    return this.getDeviceSession(householdId, sessionId);
   }
 
   async putAudit(event: AuditEvent): Promise<void> {

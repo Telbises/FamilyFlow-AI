@@ -419,6 +419,7 @@ export class FamilyFlowRepository {
         },
       }),
     );
+    await this.putDeviceIndex(session.id, session.householdId);
   }
 
   async getDeviceSession(householdId: string, sessionId: string): Promise<DeviceSession | null> {
@@ -447,19 +448,54 @@ export class FamilyFlowRepository {
     return this.stripKeys(item) as DeviceSession & { householdId: string };
   }
 
-  async markDevicePaired(householdId: string, sessionId: string): Promise<DeviceSession> {
+  async markDevicePaired(
+    householdId: string,
+    sessionId: string,
+    sessionTokenHash: string,
+    label: string,
+  ): Promise<DeviceSession> {
     const now = new Date().toISOString();
     const res = await this.doc.send(
       new UpdateCommand({
         TableName: this.tableName,
         Key: { PK: Keys.householdPk(householdId), SK: Keys.deviceSk(sessionId) },
-        UpdateExpression: "SET pairedAt = :p, pairingHash = :n REMOVE GSI2PK, GSI2SK",
-        ExpressionAttributeValues: { ":p": now, ":n": null },
+        UpdateExpression:
+          "SET pairedAt = :p, pairingHash = :n, sessionTokenHash = :th, label = :l REMOVE GSI2PK, GSI2SK",
+        ExpressionAttributeValues: { ":p": now, ":n": null, ":th": sessionTokenHash, ":l": label },
         ConditionExpression: "attribute_exists(PK) AND attribute_not_exists(pairedAt)",
         ReturnValues: "ALL_NEW",
       }),
     );
     return this.stripKeys(res.Attributes!) as DeviceSession;
+  }
+
+  async findDeviceSessionById(sessionId: string): Promise<(DeviceSession & { householdId: string }) | null> {
+    const idx = await this.doc.send(
+      new GetCommand({
+        TableName: this.tableName,
+        Key: { PK: `DEVICEIDX#${sessionId}`, SK: "META" },
+      }),
+    );
+    const householdId = idx.Item?.householdId as string | undefined;
+    if (!householdId) return null;
+    const session = await this.getDeviceSession(householdId, sessionId);
+    if (!session) return null;
+    return { ...session, householdId };
+  }
+
+  async putDeviceIndex(sessionId: string, householdId: string): Promise<void> {
+    await this.doc.send(
+      new PutCommand({
+        TableName: this.tableName,
+        Item: {
+          PK: `DEVICEIDX#${sessionId}`,
+          SK: "META",
+          entityType: "DeviceIndex",
+          sessionId,
+          householdId,
+        },
+      }),
+    );
   }
 
   async putAudit(event: AuditEvent): Promise<void> {
