@@ -92,7 +92,7 @@ Legend: `NOT_STARTED` | `IN_PROGRESS` | `BLOCKED` | `VERIFIED`
 | 26 | Automated test suite + `scripts/run-tests.sh` | **IN_PROGRESS** | Unit/slice pass; Playwright/VVD/Console not executed |
 | 27 | Security testing (authz, replay, concurrent approve) | **IN_PROGRESS** | Covered in domain/API tests; expand matrix |
 | 28 | Monitoring, recovery, cost controls | **IN_PROGRESS** | CloudWatch retention + budget in CDK; not live |
-| 29 | Simulator acceptance run (fresh) | **BLOCKED** | Needs VVD + Alexa Console + optional AWS |
+| 29 | Simulator acceptance run (fresh) | **IN_PROGRESS** | API+device+Alexa local E2E **PASS** (`docs/E2E_FIRE_TV_ALEXA_RESULTS.md`); official VVD + Alexa Console still **BLOCKED** |
 | 30 | Release docs + hackathon package | **IN_PROGRESS** | Artifact set being completed this pass |
 
 ---
