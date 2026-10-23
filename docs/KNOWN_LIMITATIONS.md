@@ -5,9 +5,11 @@ Honest list of unverified or incomplete capabilities. **Do not claim these work 
 | Limitation | Impact | Mitigation / next action |
 |------------|--------|--------------------------|
 | No AWS credentials / CLI on this host | Cannot run live Cognito, API Gateway, DynamoDB, Bedrock | Owner installs AWS CLI, configures account, approves deploy |
-| Vega SDK / VVD not installed | Cannot record official Fire TV/Vega simulator video | Install VDT; port RN-TV app to VVD |
-| Browser TV shell ≠ Vega OS | Hackathon video must use VVD or device | Keep shell for API testing only |
-| Alexa Developer Console unexecuted | Account linking not proven in Console | Configure skill + Cognito linking; or document local simulator |
+| Vega SDK / VVD not installed on build host | Cannot record official Fire TV/Vega simulator video here | Install VDT per TESTING_FIRE_TV_VEGA_ALEXA.md; port RN-TV app |
+| Browser TV shell ≠ Vega OS | Hackathon/Appstore video must use VVD or device | Keep shell for API testing only |
+| Alexa Developer Console unexecuted | Account linking needs `ask configure` + Cognito | Follow AMAZON_PUBLISH_GUIDE.md |
+| Alexa+ MCP is preview | Not a full Alexa+ partner certification | Wire per current Amazon Alexa+ docs |
+| Bedrock off by default | AI uses curated library until enabled | BEDROCK_SETUP.md + model access |
 | Local Bearer auth | Not production identity | Disable in AWS (`ALLOW_LOCAL_DEV_AUTH=false`) |
 | Bedrock default off | AI suggestions use curated library | Enable after model access + cost approval |
 | Playwright E2E missing | Dashboard not browser-automated yet | Add Playwright suite (step 26) |

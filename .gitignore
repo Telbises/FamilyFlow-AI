@@ -25,3 +25,5 @@ apps/fire-tv/ios/
 !apps/fire-tv/.gitkeep
 dynamodb-local-data/
 .pnpm-store/
+dist-release/
+apps/alexa-plus-mcp/node_modules/

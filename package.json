@@ -16,10 +16,13 @@
     "dev:api": "pnpm --filter @familyflow/api dev",
     "dev:web": "pnpm --filter @familyflow/parent-web dev",
     "dev:tv": "pnpm --filter @familyflow/fire-tv dev",
+    "dev:mcp": "pnpm --filter @familyflow/alexa-plus-mcp start",
     "synth": "pnpm --filter @familyflow/infra synth",
     "openapi": "pnpm --filter @familyflow/api openapi",
     "verify:env": "bash scripts/verify-environment.sh",
-    "test:all": "bash scripts/run-tests.sh"
+    "test:all": "bash scripts/run-tests.sh",
+    "test:e2e": "bash scripts/e2e-fire-tv-alexa.sh",
+    "pack:release": "bash scripts/pack-release-zip.sh"
   },
   "license": "MIT"
 }

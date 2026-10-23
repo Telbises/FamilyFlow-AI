@@ -13,14 +13,21 @@ FamilyFlow helps families spend time together instead of doomscrolling. Kids bro
 
 Follow `docs/DEMO-SCRIPT.md`. Prefer Vega Virtual Device or Fire TV for the TV segment once VDT is installed; until then do not imply OS certification for the browser shell.
 
+## Surfaces for judges
+
+- **Fire TV track:** Living-room mission board + pairing + parent approval (VVD or device for video)
+- **AWS Builder:** Cognito, API Gateway, Lambda, DynamoDB, Bedrock (optional), CDK
+- **Alexa / Alexa+:** ASK skill + MCP preview server (parent approval never bypassed)
+
 ## Product feedback (draft)
 
 | Tool | Used for | Worked | Needs work |
 |------|----------|--------|------------|
 | AWS CDK / Lambda / DynamoDB / Cognito | Backend | Clear patterns | Local Cognito bootstrap friction without CLI |
-| Bedrock | Adventure JSON | Schema path ready | Model access + cost gating |
-| Vega / VVD | Fire TV target | Docs clear for M-series | Full SDK install not yet done on this host |
-| ASK SDK | Voice requests | Local invoke works | Console account linking TBD |
+| Bedrock | Adventure JSON | Schema + curated fallback | Model access + cost gating on each account |
+| Vega / VVD | Fire TV target | Docs clear for M-series | Full SDK install required on demo machine |
+| ASK SDK | Voice requests | Local invoke + E2E harness | Console account linking per developer |
+| MCP SDK | Alexa+ preview tools | Tool contracts + Streamable HTTP server | Partner onboarding / Console wiring |
 
 ## Friction log (seed)
 

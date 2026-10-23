@@ -25,6 +25,7 @@ run "$PNPM" --filter @familyflow/domain test
 run "$PNPM" --filter @familyflow/api test
 run "$PNPM" --filter @familyflow/fire-tv test
 run "$PNPM" --filter @familyflow/alexa test
+run "$PNPM" --filter @familyflow/alexa-plus-mcp test
 
 if [[ "$FAIL" -ne 0 ]]; then
   echo ""
